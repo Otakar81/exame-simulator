@@ -485,22 +485,50 @@
 
         // Filter and select questions
         function selectQuestions(numQuestions, category) {
-            let filteredQuestions = questions;
-            
-            // Filter by category if not "Tutte"
-            if (category !== 'Tutte') {
-                filteredQuestions = questions.filter(q => q.category === category);
-            }
+		   let filteredQuestions = questions;
+		   
+		   // Filter by category if not "Tutte"
+		   if (category !== 'Tutte') {
+			   filteredQuestions = questions.filter(q => q.category === category);
+		   }
 
-            if (filteredQuestions.length < numQuestions) {
-                alert(`Attenzione: sono disponibili solo ${filteredQuestions.length} domande per la categoria selezionata. Il test proseguirà con tutte le domande disponibili.`);
-                numQuestions = filteredQuestions.length;
-            }
+		   if (filteredQuestions.length < numQuestions) {
+			   alert(`Attenzione: sono disponibili solo ${filteredQuestions.length} domande per la categoria selezionata. Il test proseguirà con tutte le domande disponibili.`);
+			   numQuestions = filteredQuestions.length;
+		   }
 
-            // Shuffle and select
-            const shuffled = shuffleArray(filteredQuestions);
-            return shuffled.slice(0, numQuestions);
-        }
+		   // Shuffle all filtered questions
+		   const shuffled = shuffleArray(filteredQuestions);
+		   
+		   // Select unique questions up to the requested number
+		   const uniqueQuestions = [];
+		   const seenQuestions = new Set();
+		   
+		   for (const question of shuffled) {
+			   // Skip if we already have this question (by text)
+			   if (seenQuestions.has(question.question)) {
+				   console.warn('Saltata domanda duplicata:', question.question.substring(0, 50) + '...');
+				   continue;
+			   }
+			   
+			   // Add to selection
+			   seenQuestions.add(question.question);
+			   uniqueQuestions.push(question);
+			   
+			   // Stop when we reach the desired number
+			   if (uniqueQuestions.length >= numQuestions) {
+				   break;
+			   }
+		 }
+		   
+		   // Log final selection info
+		   console.log(`Selezionate ${uniqueQuestions.length} domande univoche su ${numQuestions} richieste`);
+		   if (uniqueQuestions.length < numQuestions) {
+			   console.warn(`Attenzione: trovate solo ${uniqueQuestions.length} domande univoche invece di ${numQuestions}`);
+		   }
+		   
+		   return uniqueQuestions;
+		}
 
         // Start timer
         function startTimer() {
