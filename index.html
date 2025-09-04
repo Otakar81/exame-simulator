@@ -360,6 +360,9 @@
         <div class="content">
             <!-- Setup Section -->
             <div id="setup" class="setup-section">
+			
+				<div id="numeroDomandeArchivio" class="question-number"></div>
+			
                 <div class="form-group">
                     <label for="numQuestions">Numero di domande:</label>
                     <select id="numQuestions">
@@ -475,6 +478,9 @@
                 }
                 questions = await response.json();
                 console.log(`Caricate ${questions.length} domande`);
+				
+				document.getElementById('numeroDomandeArchivio').textContent = `Sono presenti ${questions.length} domande in archivio`;
+				
             } catch (error) {
                 console.error('Errore nel caricamento delle domande:', error);
                 alert('Errore nel caricamento del file quiz_mc.json. Assicurati che sia nella stessa cartella del file HTML.');
