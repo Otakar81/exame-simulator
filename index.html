@@ -381,6 +381,15 @@
                         <option value="Altro">Altro</option>
                     </select>
                 </div>
+				
+				<div class="form-group">
+                    <label for="origine">Origine:</label>
+                    <select id="origine">
+                        <option value="Tutte">Tutte le origini</option>
+                        <option value="Mininterno">Mininterno</option>
+                        <option value="Mininterno-word">Mininterno-word</option>
+                    </select>
+                </div>
 
                 <button id="startQuiz" class="btn">Inizia il Test</button>
             </div>
@@ -484,12 +493,17 @@
         }
 
         // Filter and select questions
-        function selectQuestions(numQuestions, category) {
+        function selectQuestions(numQuestions, category, origine) {
 		   let filteredQuestions = questions;
 		   
 		   // Filter by category if not "Tutte"
 		   if (category !== 'Tutte') {
 			   filteredQuestions = questions.filter(q => q.category === category);
+		   }
+		   
+		   // Filter by category if not "Tutte"
+		   if (origine !== 'Tutte') {
+			   filteredQuestions = questions.filter(q => q.origine === origine);
 		   }
 
 		   if (filteredQuestions.length < numQuestions) {
@@ -585,7 +599,7 @@
             
             // Update question info
             document.getElementById('questionNumber').textContent = `Domanda ${currentQuestionIndex + 1} di ${currentQuestions.length}`;
-            document.getElementById('categoryBadge').textContent = question.category;
+            document.getElementById('categoryBadge').textContent = `${question.origine} (${question.category})`;
             document.getElementById('questionText').textContent = question.question;
             
             // Create options array
@@ -717,6 +731,7 @@
         async function startQuiz() {
             const numQuestions = parseInt(document.getElementById('numQuestions').value);
             const category = document.getElementById('category').value;
+			const origine = document.getElementById('origine').value;
             
             document.getElementById('setup').style.display = 'none';
             document.getElementById('loading').classList.remove('hidden');
@@ -739,7 +754,7 @@
             }
             
             // Select questions
-            currentQuestions = selectQuestions(numQuestions, category);
+            currentQuestions = selectQuestions(numQuestions, category, origine);
             
             if (currentQuestions.length === 0) {
                 alert('Nessuna domanda disponibile per i criteri selezionati.');
