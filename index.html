@@ -496,6 +496,7 @@
 		
 
         // Shuffle array function
+		/*
         function shuffleArray(array) {
             const shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -504,19 +505,32 @@
             }
             return shuffled;
         }
+		*/
+		
+		function shuffleArray(array) {
+			const shuffled = [...array];
+			// Multiple passes for better randomization
+			for (let pass = 0; pass < 3; pass++) {
+				for (let i = shuffled.length - 1; i > 0; i--) {
+					const j = Math.floor(Math.random() * (i + 1));
+					[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+				}
+			}
+			return shuffled;
+		}
 
         // Filter and select questions
         function selectQuestions(numQuestions, category, origine) {
-		   let filteredQuestions = questions;
-		   
+		   let filteredQuestions = [...questions]; // Create a copy to avoid mutations
+   
 		   // Filter by category if not "Tutte"
 		   if (category !== 'Tutte') {
-			   filteredQuestions = questions.filter(q => q.category === category);
+			   filteredQuestions = filteredQuestions.filter(q => q.category === category);
 		   }
 		   
-		   // Filter by category if not "Tutte"
+		   // Filter by origine if not "Tutte" - FIX: use filteredQuestions instead of questions
 		   if (origine !== 'Tutte') {
-			   filteredQuestions = questions.filter(q => q.origine === origine);
+			   filteredQuestions = filteredQuestions.filter(q => q.origine === origine);
 		   }
 
 		   if (filteredQuestions.length < numQuestions) {
