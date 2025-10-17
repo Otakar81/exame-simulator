@@ -12,12 +12,20 @@
 
 	<!-- Registrazione service worker -->
 	<script>
-	  if ('serviceWorker' in navigator) {
-		navigator.serviceWorker.register('service-worker.js')
-		  .then(() => console.log("Service Worker registrato"))
-		  .catch(err => console.error("Errore SW:", err));
-	  }
-	</script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const newSW = reg.installing;
+          newSW.addEventListener('statechange', () => {
+            if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+              alert("È disponibile una nuova versione. Ricarica per aggiornare!");
+            }
+          });
+        });
+      });
+    }
+    </script>
+
 	
     <style>
         * {
@@ -392,6 +400,7 @@
 						<option value="Vanvitelli-PC1">Vanvitelli Patologia Clinica 1</option>
 						<option value="Vanvitelli-PC2">Vanvitelli Patologia Clinica 2</option>
 						<option value="Vanvitelli-BC">Vanvitelli Biochimica Clinica</option>
+                        <option value="Sapienza-MV">Sapienza (Microbiologia e Virologia)</option>
                     </select>
                 </div>
 
